@@ -14,9 +14,9 @@ PAD_SOUTH: [
     "dvdd_pads\\[0\\].pad",
 
     "inputs\\[0\\].pad",
-    "input\\[1\\].pad",
-    "input\\[2\\].pad",
-    "input\\[3\\].pad",
+    "inputs\\[1\\].pad",
+    "inputs\\[2\\].pad",
+    "inputs\\[3\\].pad",
     "bidir\\[0\\].pad",
     "bidir\\[1\\].pad",
     "bidir\\[2\\].pad"
