@@ -145,7 +145,7 @@ WAIVER_FILE := waiver.vlt
 
 LINT_FLAGS := -Wall -Wpedantic -Ilib
 
-entry_deps := $(SRC_DIR)/slot_defines.svh $(SRC_DIR)/chip_top.sv $(SRC_DIR)/chip_core.sv
+entry_deps := $(SRC_DIR)/slot_defines.svh $(SRC_DIR)/chip_core.sv
 entry_deps += $(wildcard $(COFFEEPOT_SRC_DIR)/*.v) 
 
 lint: $(entry_deps)
