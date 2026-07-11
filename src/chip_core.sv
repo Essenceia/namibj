@@ -55,7 +55,7 @@ wire [PORT_CNT*PHY_W-1:0] phy_tx;
 localparam RMII_IN_W  = 4; 
 localparam RMII_OUT_W = 3; 
 
-wire [PORT_CNT*RMII_OUT_W-1:0] bidir_input_unusued; 
+wire [NUM_BIDIR_PADS-1:0] bidir_input_unused; 
 
 genvar i; 
 generate 
@@ -79,7 +79,7 @@ generate
 		assign bidir_pu[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b0}};
 		assign bidir_pd[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b1}};
 
-		assign bidir_input_unusued[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = bidir_in[(i+1)*RMII_OUT_W-1-:RMII_OUT_W];
+		assign bidir_input_unused[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = bidir_in[(i+1)*RMII_OUT_W-1-:RMII_OUT_W];
 	end
 endgenerate 
 
@@ -95,15 +95,17 @@ assign bidir_ie[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_C
 assign bidir_pu[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_CNT{1'b0}};
 assign bidir_pd[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_CNT{1'b0}}; // floating pad
 
+assign bidir_input_unused[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT] = bidir_in[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT];
+
 coffeepot #(.PORT_CNT(3), .PHY_W(2), .HAS_TX_PHASE(0)) m_coffeeport(
 	.clk(clk), 
 	.rst_n(rst_n), 
 
 	.tx_phase_i(1'bX),
 	
-	.phy_rx_v_i(phy_rx),
-	.phy_rx_err_i(phy_rx_v),
-	.phy_rx_i(phy_rx_err),
+	.phy_rx_v_i(phy_rx_v),
+	.phy_rx_err_i(phy_rx_err),
+	.phy_rx_i(phy_rx),
 
 	.phy_tx_v_o(phy_tx_v),
 	.phy_tx_o(phy_tx)
