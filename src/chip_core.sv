@@ -4,9 +4,15 @@
 `default_nettype none
 
 module chip_core #(
+`ifdef VERILATOR_LINT
+    parameter NUM_INPUT_PADS = 12,
+    parameter NUM_BIDIR_PADS = 33,
+    parameter NUM_ANALOG_PADS = 1,
+`else
     parameter NUM_INPUT_PADS,
     parameter NUM_BIDIR_PADS,
     parameter NUM_ANALOG_PADS,
+`endif
 	localparam PORT_CNT = 3,
 	localparam PHY_W    = 2 
     )(
@@ -64,7 +70,7 @@ generate
 	
 		// out 
 		assign bidir_out[i*RMII_OUT_W+PHY_W-1-:PHY_W] = phy_tx[(i+1)*PHY_W-1-:PHY_W];
-		assign didir_out[i*RMII_OUT_W+2]              = phy_tx_v[i];
+		assign bidir_out[i*RMII_OUT_W+2]              = phy_tx_v[i];
 
 		assign bidir_oe[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b1}};
 		assign bidir_cs[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b0}};

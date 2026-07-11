@@ -138,16 +138,15 @@ sim-view: ## View simulation waveforms in GTKWave
 # Lint
 PROJET_NAME := chip_core
 SRC_DIR := src
-COFFEEPOT_SRC_DIR := $(SRC_DIR)/src/coffeepot
+COFFEEPOT_SRC_DIR := $(SRC_DIR)/coffeepot/src
 
 CONF := conf
 WAIVER_FILE := waiver.vlt
 
 LINT_FLAGS := -Wall -Wpedantic -Ilib
 
-entry_deps := $(SRC_DIR)/slot_defines.svh $(SRC_DIR)/chip_core.sv
-entry_deps += $(wildcard $(COFFEEPOT_SRC_DIR)/*.v) 
+entry_deps := $(SRC_DIR)/slot_defines.svh $(SRC_DIR)/chip_core.sv $(wildcard $(COFFEEPOT_SRC_DIR)/*.v) 
 
 lint: $(entry_deps)
-	verilator $(CONF)/$(WAIVER_FILE) -y $(SRC_DIR) --lint-only $(LINT_FLAGS) --no-timing $^ --top $(PROJET_NAME)
+	verilator $(CONF)/$(WAIVER_FILE) -y $(SRC_DIR) -DVERILATOR_LINT=1 --lint-only $(LINT_FLAGS) --no-timing $^ --top $(PROJET_NAME)
 .PHONY: lint

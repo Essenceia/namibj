@@ -1,4 +1,5 @@
 `verilator_config 
 
 lint_off -rule TIMESCALEMOD -file "*" 
+lint_off -rule DECLFILENAME -file "*/utils.v"
 lint_off -rule UNUSEDSIGNAL -file "*" -match "Signal is not used: 'debug_*"
