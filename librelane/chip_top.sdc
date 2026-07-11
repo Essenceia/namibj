@@ -80,3 +80,14 @@ if { [info exists ::env(OPENLANE_SDC_IDEAL_CLOCKS)] && $::env(OPENLANE_SDC_IDEAL
     set_propagated_clock [all_clocks]
 }
 
+# LAN pin specific timings 
+set ::env(PHY_RX_PINS) [get_ports {input_PAD[*]}]
+set ::env(PHY_TX0_PINS) [get_ports {bidir_PAD[2-0]}]
+set ::env(PHY_TX1_PINS) [get_ports {bidir_PAD[5-3]}]
+set ::env(PHY_TX2_PINS) [get_ports {bidir_PAD[8-6]}]
+set ::env(INPUT_PHY_CLK) $clock_port 
+set ::env(OUTPUT_CLOCK_TX0) $clock_port 
+set ::env(OUTPUT_CLOCK_TX1) $clock_port 
+set ::env(OUTPUT_CLOCK_TX2) $clock_port 
+
+read_sdc $::env(DESIGN_DIR)/coffeepot/src/lan8720a.sdc
