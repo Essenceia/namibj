@@ -90,4 +90,4 @@ set ::env(OUTPUT_CLOCK_TX0) $clock_port
 set ::env(OUTPUT_CLOCK_TX1) $clock_port 
 set ::env(OUTPUT_CLOCK_TX2) $clock_port 
 
-read_sdc $::env(DESIGN_DIR)/coffeepot/src/lan8720a.sdc
+read_sdc $::env(DESIGN_DIR)/../src/coffeepot/src/lan8720a.sdc

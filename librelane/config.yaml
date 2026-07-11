@@ -32,6 +32,20 @@ DESIGN_NAME: chip_top
 VERILOG_FILES:
 - dir::../src/chip_top.sv
 - dir::../src/chip_core.sv
+- dir::../src/coffeepot/src/coffeepot.v
+- dir::../src/coffeepot/src/aiguilleur.v
+- dir::../src/coffeepot/src/dispatcher.v
+- dir::../src/coffeepot/src/mac_addr_table.v
+- dir::../src/coffeepot/src/mac_rx.v
+- dir::../src/coffeepot/src/mac_tx.v
+- dir::../src/coffeepot/src/rmii.v
+- dir::../src/coffeepot/src/switch.v
+- dir::../src/coffeepot/src/tx_tt_buffer.v
+- dir::../src/coffeepot/src/utils.v
+- dir::../src/coffeepot/src/arbitor.v
+- dir::../src/coffeepot/src/lookup.v
+- dir::../src/coffeepot/src/ttnn_timer.v
+- dir::../src/coffeepot/src/replacement_policy.v
 
 # Enable plugin for better SystemVerilog support
 # USE_SLANG: True
