@@ -20,7 +20,7 @@ pad = os.getenv("PAD", "gf180mcu_fd_io")
 sram = os.getenv("SRAM", "gf180mcu_fd_ip_sram")
 slot = os.getenv("SLOT", "1x1")
 
-hdl_toplevel = "chip_top"
+hdl_toplevel = "chip_top_tb"
 
 async def set_defaults(dut):
     dut.input_PAD.value = 0
@@ -51,8 +51,8 @@ async def start_up(dut):
     await set_defaults(dut)
     if gl:
         await enable_power(dut)
-    await start_clock(dut.clk_PAD)
-    await reset(dut.rst_n_PAD)
+    await start_clock(dut.clk)
+    await reset(dut.rst_n)
 
 
 @cocotb.test()
@@ -70,7 +70,7 @@ async def test_counter(dut):
     logger.info("Running the test...")
 
     # Wait for some time...
-    await ClockCycles(dut.clk_PAD, 10)
+    await ClockCycles(dut.clk, 10)
 
     # Please note that cocotb cannpt write to individual bits of a vector.
     # If you need to write to individual bits, you can separate e.g. the 
@@ -78,13 +78,10 @@ async def test_counter(dut):
     # Even better, use individual pad names for each bit.
 
     # Start the counter by setting all inputs to 1
-    dut.input_PAD.value = -1
+    dut.input_PAD.value = 0
 
     # Wait for a number of clock cycles
-    await ClockCycles(dut.clk_PAD, 100)
-
-    # Check the end result of the counter
-    assert dut.bidir_PAD.value == 100 - 1
+    await ClockCycles(dut.clk, 100)
 
     logger.info("Done!")
 
@@ -101,8 +98,9 @@ def chip_top_runner():
     defines[f"PDK_{pdk.replace('-','_')}"] = True
     defines[f"SCL_{scl}"] = True
     defines[f"PAD_{pad}"] = True
-    defines[f"SRAM_{sram}"] = True
+    defines[f"SRAM_{sram}"] = False
 
+    sources.append(proj_path / "chip_top_tb.v")
     if gl:
         # SCL models
         sources.append(Path(pdk_root) / pdk / "libs.ref" / scl / "verilog" / f"{scl}.v")
@@ -116,13 +114,29 @@ def chip_top_runner():
     else:
         sources.append(proj_path / "../src/chip_top.sv")
         sources.append(proj_path / "../src/chip_core.sv")
+        
+        coffeepot_path = proj_path / "../src/coffeepot/src"
+        sources.append(coffeepot_path / "coffeepot.v")
+        sources.append(coffeepot_path / "aiguilleur.v")
+        sources.append(coffeepot_path / "dispatcher.v")
+        sources.append(coffeepot_path / "mac_addr_table.v")
+        sources.append(coffeepot_path / "mac_rx.v")
+        sources.append(coffeepot_path / "mac_tx.v")
+        sources.append(coffeepot_path / "rmii.v")
+        sources.append(coffeepot_path / "switch.v")
+        sources.append(coffeepot_path / "tx_tt_buffer.v")
+        sources.append(coffeepot_path / "utils.v")
+        sources.append(coffeepot_path / "arbitor.v")
+        sources.append(coffeepot_path / "lookup.v")
+        sources.append(coffeepot_path / "ttnn_timer.v")
+        sources.append(coffeepot_path / "replacement_policy.v")
 
     sources += [
         # IO pad models
         Path(pdk_root) / pdk / f"libs.ref/{pad}/verilog/{pad}.v",
         
         # SRAM macros
-        Path(pdk_root) / pdk / f"libs.ref/{sram}/verilog/{sram}__sram512x8m8wm1.v",
+        #Path(pdk_root) / pdk / f"libs.ref/{sram}/verilog/{sram}__sram512x8m8wm1.v",
         
         # Custom IP
         proj_path / "../ip/gf180mcu_ws_ip__logo/vh/gf180mcu_ws_ip__logo.v",

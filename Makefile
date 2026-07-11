@@ -150,3 +150,9 @@ entry_deps := $(SRC_DIR)/slot_defines.svh $(SRC_DIR)/chip_core.sv $(wildcard $(C
 lint: $(entry_deps)
 	verilator $(CONF)/$(WAIVER_FILE) -y $(SRC_DIR) -DVERILATOR_LINT=1 --lint-only $(LINT_FLAGS) --no-timing $^ --top $(PROJET_NAME)
 .PHONY: lint
+
+# Clean
+clean: 
+	rm -rf ./cocotb/sim_build
+
+.PHONY: clean
