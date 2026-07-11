@@ -133,3 +133,22 @@ sim-gl: clone-pdk defines ## Run gate-level simulation with cocotb (after copy-f
 sim-view: ## View simulation waveforms in GTKWave
 	gtkwave cocotb/sim_build/chip_top.fst
 .PHONY: sim-view
+
+
+# Lint
+PROJET_NAME := chip_core
+SRC_DIR := src
+COFFEEPOT_SRC_DIR := $(SRC_DIR)/src/coffeepot
+
+CONF := conf
+WAIVER_FILE := waiver.vlt
+
+LINT_FLAGS := -Wall -Wpedantic -Ilib
+
+entry_deps := $(wildcard $(SRC_DIR)/*.sv) $(wildcard $(SRC_DIR)/*.svh) $(wildcard $(COFFEEPOT_SRC_DIR)/*.v) 
+$(info SRCS $(SRC_DIR))
+$(info PWD $(shell pwd))
+$(info DEPS $(entry_deps))
+lint: $(entry_deps)
+	verilator $(CONF)/$(WAIVER_FILE) --lint-only $(LINT_FLAGS) --no-timing $^ --top $(PROJET_NAME)
+.PHONY: lint
