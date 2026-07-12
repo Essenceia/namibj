@@ -5,7 +5,7 @@ Open source Ethernet focused ASIC featuring a
 This chip is targetting was designed for the second run of [wafer.space](https://wafer.space/) 
 targetting the open source Global Foundaries 180 nm process (`gf180mcu`). 
 
-![floorplan](docs/chip_top.png) 
+![floorplan](precheck/chip_top.png) 
 
 Features: 
 - Ethernet switch:
