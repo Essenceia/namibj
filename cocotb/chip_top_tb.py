@@ -22,6 +22,11 @@ slot = os.getenv("SLOT", "1x1")
 
 hdl_toplevel = "chip_top_tb"
 
+import time
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "../src/coffeepot/test"))
+import switch_tests
+
 async def set_defaults(dut):
     dut.input_PAD.value = 0
 
@@ -34,6 +39,13 @@ async def start_clock(clock, freq=50):
     c = Clock(clock, 1 / freq * 1000, "ns")
     cocotb.start_soon(c.start())
 
+def set_random_seed():
+    if "SEED" in os.environ:
+        seed = int(os.environ["SEED"].lower().strip())
+    else:
+        seed = time.time_ns()
+    cocotb.log.info(f"random seed {seed}")
+    random.seed(seed)
 
 async def reset(reset, active_low=True, time_ns=1000):
     """Reset dut"""
@@ -53,7 +65,7 @@ async def start_up(dut):
         await enable_power(dut)
     await start_clock(dut.clk)
     await reset(dut.rst_n)
-
+    set_random_seed()
 
 @cocotb.test()
 async def test_counter(dut):
@@ -72,12 +84,7 @@ async def test_counter(dut):
     # Wait for some time...
     await ClockCycles(dut.clk, 10)
 
-    # Please note that cocotb cannpt write to individual bits of a vector.
-    # If you need to write to individual bits, you can separate e.g. the 
-    # bidir_PAD vector into individual bits through a tb wrapper.
-    # Even better, use individual pad names for each bit.
-
-    # Start the counter by setting all inputs to 1
+   # Start the counter by setting all inputs to 1
     dut.input_PAD.value = 0
 
     # Wait for a number of clock cycles
@@ -85,6 +92,51 @@ async def test_counter(dut):
 
     logger.info("Done!")
 
+@cocotb.test()
+async def simple_broadcast_test(dut):
+    await start_up(dut) 
+    await switch_tests.simple_unicast_test_sequence(dut)
+
+@cocotb.test()
+async def checking_broadcast_test(dut):
+    await start_up(dut)
+    await switch_tests.checking_broadcast_test_sequence(dut)
+
+@cocotb.test()
+async def simple_unicast_test(dut):
+    await start_up(dut) 
+    await switch_tests.simple_unicast_test_sequence(dut)
+
+@cocotb.test()
+async def table_entry_expire_test(dut):
+    await start_up(dut) 
+    await switch_tests.table_entry_expire_test_sequence(dut)
+
+@cocotb.test()
+async def table_multialloc_test(dut): 
+    await start_up(dut) 
+    await switch_tests.table_multialloc_test_sequence(dut)
+
+@cocotb.test()
+async def table_realloc_test(dut): 
+    await start_up(dut) 
+    await switch_tests.table_realloc_test_sequence(dut)
+
+# sim only tests: need accurate tracking of entry liveness to prevent fausle failes
+@cocotb.test(skip=True if gl == "yes" else False)
+async def table_stress_read(dut):
+    await start_up(dut)
+    await switch_tests.table_stress_read_sequence(dut)
+
+@cocotb.test()
+async def no_rebroadcsat_on_incomming_test(dut):
+    await start_up(dut)
+    await switch_tests.no_rebroadcsat_on_incomming_test_sequence(dut)
+
+@cocotb.test()
+async def close_rx_packets_test(dut):
+    await start_up(dut)
+    await switch_tests.close_rx_packets_test_sequence(dut)
 
 def chip_top_runner():
 
