@@ -128,13 +128,16 @@ async def coffeepot_table_multialloc_test(dut):
 @cocotb.test()
 async def coffeepot_table_realloc_test(dut): 
     await start_up(dut) 
-    await coffeepot_tests.table_realloc_test_sequence(dut)
+    coffeepot_module = dut.chip_top.i_chip_core.m_coffeepot
+    await coffeepot_tests.table_realloc_test_sequence(dut, coffeepot_module )
 
 # sim only tests: need accurate tracking of entry liveness to prevent fausle failes
 @cocotb.test(skip=True if GATES else False)
 async def coffeepot_table_stress_read(dut):
     await start_up(dut)
-    await coffeepot_tests.table_stress_read_sequence(dut)
+    cocotb.log.info(type(dut.chip_top))
+    coffeepot_module = dut.chip_top.i_chip_core.m_coffeepot
+    await coffeepot_tests.table_stress_read_sequence(dut, coffeepot_module)
 
 @cocotb.test()
 async def coffeepot_no_rebroadcsat_on_incomming_test(dut):
@@ -158,7 +161,8 @@ async def coldbrew_simple_tx_test(dut):
 @cocotb.test(skip=True if GATES else False)
 async def coldbrew_update_eth_config(dut):
     await start_up(dut)
-    await coldbrew_tests.update_eth_config_sequence(dut, phy_idx = coldbrew_phy)
+    coldbrew_module = dut.chip_top.i_chip_core.m_coldbrew
+    await coldbrew_tests.update_eth_config_sequence(dut, coldbrew_module, phy_idx = coldbrew_phy)
 
 
 def chip_top_runner():

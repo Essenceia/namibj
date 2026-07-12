@@ -15,7 +15,7 @@ Features:
 - Heat death of the Universe counter:
   - Broadcasts an Ethernet Frame over the local network ever 1s
   - 100Mbps Ethernet compatible, 100BASE-TX
-  - Our solar system will be gone before it overflows 
+  - Our solar system will have been engulfed by the sun before it overflows 
 
 
 ## Coffee-shop family 

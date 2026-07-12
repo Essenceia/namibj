@@ -101,7 +101,7 @@ assign bidir_pd[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_C
 
 assign bidir_input_unused[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT] = bidir_in[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT];
 
-coffeepot #(.PORT_CNT(SWITCH_PORT_CNT), .PHY_W(PHY_W), .HAS_TX_PHASE(0)) m_coffeeport(
+coffeepot #(.PORT_CNT(SWITCH_PORT_CNT), .PHY_W(PHY_W), .HAS_TX_PHASE(0)) m_coffeepot(
 	.clk(clk), 
 	.rst_n(rst_n), 
 
