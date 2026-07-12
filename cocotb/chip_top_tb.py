@@ -21,7 +21,8 @@ sram = os.getenv("SRAM", "gf180mcu_fd_ip_sram")
 slot = os.getenv("SLOT", "1x1")
 WAVES = os.getenv("WAVES", "1").lower() in ("true", "yes", "1")
 
-hdl_toplevel = "chip_top_tb"
+hdl_toplevel = "chip_top"
+tb_toplevel = "chip_top_tb"
 
 coldbrew_phy = "3"
 PHY_NUM = 4
@@ -258,7 +259,7 @@ def chip_top_runner():
     runner = get_runner(sim)
     runner.build(
         sources=sources,
-        hdl_toplevel=hdl_toplevel,
+        hdl_toplevel=tb_toplevel,
         defines=defines,
         always=True,
         includes=includes,
@@ -269,7 +270,7 @@ def chip_top_runner():
     plusargs = []
 
     runner.test(
-        hdl_toplevel=hdl_toplevel,
+        hdl_toplevel=tb_toplevel,
         test_module="chip_top_tb,",
         plusargs=plusargs,
         waves=WAVES,
