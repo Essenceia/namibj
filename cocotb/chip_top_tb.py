@@ -12,7 +12,7 @@ from cocotb.triggers import Timer, Edge, RisingEdge, FallingEdge, ClockCycles
 from cocotb_tools.runner import get_runner
 
 sim = os.getenv("SIM", "icarus")
-gl = os.getenv("GL", False)
+GATES = os.getenv("GL", False)
 pdk_root = os.getenv("PDK_ROOT", Path(__file__).resolve().parent / "../gf180mcu")
 pdk = os.getenv("PDK", "gf180mcuD")
 scl = os.getenv("SCL", "gf180mcu_fd_sc_mcu7t5v0")
@@ -61,7 +61,8 @@ async def reset(reset, active_low=True, time_ns=1000):
 async def start_up(dut):
     """Startup sequence"""
     await set_defaults(dut)
-    if gl:
+    cocotb.log.info(f"GATES {GATES}")
+    if GATES:
         await enable_power(dut)
     await start_clock(dut.clk)
     await reset(dut.rst_n)
@@ -123,7 +124,7 @@ async def table_realloc_test(dut):
     await switch_tests.table_realloc_test_sequence(dut)
 
 # sim only tests: need accurate tracking of entry liveness to prevent fausle failes
-@cocotb.test(skip=True if gl == "yes" else False)
+@cocotb.test(skip=True if GATES == "yes" else False)
 async def table_stress_read(dut):
     await start_up(dut)
     await switch_tests.table_stress_read_sequence(dut)
@@ -152,8 +153,9 @@ def chip_top_runner():
     defines[f"PAD_{pad}"] = True
     defines[f"SRAM_{sram}"] = False
 
+
     sources.append(proj_path / "chip_top_tb.v")
-    if gl:
+    if GATES:
         # SCL models
         sources.append(Path(pdk_root) / pdk / "libs.ref" / scl / "verilog" / f"{scl}.v")
         if scl != "gf180mcu_as_sc_mcu7t3v3":
@@ -182,6 +184,9 @@ def chip_top_runner():
         sources.append(coffeepot_path / "lookup.v")
         sources.append(coffeepot_path / "ttnn_timer.v")
         sources.append(coffeepot_path / "replacement_policy.v")
+        
+        #cocotb sim specific defs to reduce counter size
+        defines["COCOTB"] = True
 
     sources += [
         # IO pad models
