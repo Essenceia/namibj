@@ -19,6 +19,7 @@ scl = os.getenv("SCL", "gf180mcu_fd_sc_mcu7t5v0")
 pad = os.getenv("PAD", "gf180mcu_fd_io")
 sram = os.getenv("SRAM", "gf180mcu_fd_ip_sram")
 slot = os.getenv("SLOT", "1x1")
+WAVES = os.getenv("WAVES", "1").lower() in ("true", "yes", "1")
 
 hdl_toplevel = "chip_top_tb"
 coldbrew_phy = "3"
@@ -26,7 +27,7 @@ coldbrew_phy = "3"
 import time
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "../src/coffeepot/test"))
-import switch_tests
+import coffeepot_tests
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../src/coldbrew/test"))
 import coldbrew_tests
@@ -102,48 +103,48 @@ async def test_counter(dut):
 @cocotb.test()
 async def coffeepot_simple_broadcast_test(dut):
     await start_up(dut) 
-    await switch_tests.simple_unicast_test_sequence(dut)
+    await coffeepot_tests.simple_unicast_test_sequence(dut)
 
 @cocotb.test()
 async def coffeepot_checking_broadcast_test(dut):
     await start_up(dut)
-    await switch_tests.checking_broadcast_test_sequence(dut)
+    await coffeepot_tests.checking_broadcast_test_sequence(dut)
 
 @cocotb.test()
 async def coffeepot_simple_unicast_test(dut):
     await start_up(dut) 
-    await switch_tests.simple_unicast_test_sequence(dut)
+    await coffeepot_tests.simple_unicast_test_sequence(dut)
 
 @cocotb.test()
 async def coffeepot_table_entry_expire_test(dut):
     await start_up(dut) 
-    await switch_tests.table_entry_expire_test_sequence(dut)
+    await coffeepot_tests.table_entry_expire_test_sequence(dut)
 
 @cocotb.test()
 async def coffeepot_table_multialloc_test(dut): 
     await start_up(dut) 
-    await switch_tests.table_multialloc_test_sequence(dut)
+    await coffeepot_tests.table_multialloc_test_sequence(dut)
 
 @cocotb.test()
 async def coffeepot_table_realloc_test(dut): 
     await start_up(dut) 
-    await switch_tests.table_realloc_test_sequence(dut)
+    await coffeepot_tests.table_realloc_test_sequence(dut)
 
 # sim only tests: need accurate tracking of entry liveness to prevent fausle failes
 @cocotb.test(skip=True if GATES else False)
 async def coffeepot_table_stress_read(dut):
     await start_up(dut)
-    await switch_tests.table_stress_read_sequence(dut)
+    await coffeepot_tests.table_stress_read_sequence(dut)
 
 @cocotb.test()
 async def coffeepot_no_rebroadcsat_on_incomming_test(dut):
     await start_up(dut)
-    await switch_tests.no_rebroadcsat_on_incomming_test_sequence(dut)
+    await coffeepot_tests.no_rebroadcsat_on_incomming_test_sequence(dut)
 
 @cocotb.test()
 async def coffeepot_close_rx_packets_test(dut):
     await start_up(dut)
-    await switch_tests.close_rx_packets_test_sequence(dut)
+    await coffeepot_tests.close_rx_packets_test_sequence(dut)
 
 # Coldbrew (heat death of the universe beacon) tb's
 # Tests are dissabled for gate level since real counter width is used 
@@ -254,7 +255,7 @@ def chip_top_runner():
         always=True,
         includes=includes,
         build_args=build_args,
-        waves=True,
+        waves=WAVES,
     )
 
     plusargs = []
@@ -263,7 +264,7 @@ def chip_top_runner():
         hdl_toplevel=hdl_toplevel,
         test_module="chip_top_tb,",
         plusargs=plusargs,
-        waves=True,
+        waves=WAVES,
     )
 
 
