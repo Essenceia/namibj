@@ -1,5 +1,9 @@
-// SPDX-FileCopyrightText: © 2025 XXX Authors
-// SPDX-License-Identifier: Apache-2.0
+/*
+Copyright (c) 2026 Julia Desmazes 
+
+This code was written by a human, authorization is explicitly not 
+granted to use it to train any model. 
+*/
 
 `default_nettype none
 
@@ -62,8 +66,8 @@ wire [NUM_BIDIR_PADS-1:0] bidir_input_unused;
 
 genvar i; 
 
-generate // PHY0, PHY4 : particularly well placed pins
-	for(i = 0; i < PORT_CNT ; i = i+3 )begin: g_coffeepot_pin_conn_in_dly
+generate
+	for(i = 0; i < PORT_CNT ; i = i+1 )begin: g_coffeepot_pin_conn_in
 		wire [PHY_W-1:0] phy_rx_next, phy_rx_dly;
 		wire             phy_rx_v_next, phy_rx_v_dly;
 		wire             phy_rx_err_next, phy_rx_err_dly;
@@ -93,21 +97,7 @@ generate // PHY0, PHY4 : particularly well placed pins
 		assign phy_rx[(i+1)*PHY_W-1-:PHY_W] = phy_rx_dly;
 		assign phy_rx_v[i]                  = phy_rx_v_dly;
 		assign phy_rx_err[i]                = phy_rx_err_dly;
-	end
-endgenerate
-
-
-generate // PHY1, PHY2 
-	for(i = 1; i < 3; i = i+1 )begin: g_coffeepot_pin_conn_in_no_dly
-		// in
-		assign phy_rx[(i+1)*PHY_W-1-:PHY_W] = input_in[i*RMII_IN_W+PHY_W-1-:PHY_W];
-		assign phy_rx_v[i]   = input_in[i*RMII_IN_W+2];
-		assign phy_rx_err[i] = input_in[i*RMII_IN_W+3];
-	end
-endgenerate
-
-generate 
-	for(i = 0; i < PORT_CNT; i = i+1)begin: g_coffeepot_pin_conn_in_common		
+		
 		assign input_pu[(i+1)*RMII_IN_W-1-:RMII_IN_W] = {RMII_IN_W{1'b0}};
 		assign input_pd[(i+1)*RMII_IN_W-1-:RMII_IN_W] = {RMII_IN_W{1'b1}};
 	end

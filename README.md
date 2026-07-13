@@ -18,6 +18,7 @@ Features:
   - 100Mbps Ethernet compatible, 100BASE-TX
   - Our solar system will have been engulfed by the sun before it overflows 
 
+:heart: This is 100% human made code, all bugs are also 100% human made. 
 
 ## Coffee-shop family 
 
