@@ -93,6 +93,7 @@ generate // PHY0, PHY4 : particularly well placed pins
 		assign phy_rx[(i+1)*PHY_W-1-:PHY_W] = phy_rx_dly;
 		assign phy_rx_v[i]                  = phy_rx_v_dly;
 		assign phy_rx_err[i]                = phy_rx_err_dly;
+	end
 endgenerate
 
 
@@ -102,12 +103,14 @@ generate // PHY1, PHY2
 		assign phy_rx[(i+1)*PHY_W-1-:PHY_W] = input_in[i*RMII_IN_W+PHY_W-1-:PHY_W];
 		assign phy_rx_v[i]   = input_in[i*RMII_IN_W+2];
 		assign phy_rx_err[i] = input_in[i*RMII_IN_W+3];
+	end
 endgenerate
 
 generate 
 	for(i = 0; i < PORT_CNT; i = i+1)begin: g_coffeepot_pin_conn_in_common		
 		assign input_pu[(i+1)*RMII_IN_W-1-:RMII_IN_W] = {RMII_IN_W{1'b0}};
 		assign input_pd[(i+1)*RMII_IN_W-1-:RMII_IN_W] = {RMII_IN_W{1'b1}};
+	end
 endgenerate 
 
 generate 
