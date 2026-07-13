@@ -5,6 +5,7 @@ Open source Ethernet focused ASIC featuring a
 This chip is designed for the second run of [wafer.space](https://wafer.space/), 
 targetting the Global Foundaries 180 nm process (`gf180mcu`), using the [open source `gf180mcuD` PDK](https://gf180mcu-pdk.readthedocs.io/en/latest/). 
 
+
 ![floorplan](precheck/chip_top.png) 
 
 Features: 
@@ -28,6 +29,9 @@ This full chip ties together in a single package multiple projects that are all 
 This IP has been re-addapted to make the best use of a full chip tapeout, checkout the `ws_run2` branch or the submodules to see the version of the IP being used.  
 
 ## Pinouts 
+
+Since the LAN8720A PHY chip directly supports IO volatages between +1.62V and +3.6V, in order to be easily compatible, our ASIC targets an 
+operating volate of 3.3V, which would result in an IO operating also at 3v3. 
 
 TODO 
 
