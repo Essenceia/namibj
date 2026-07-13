@@ -132,6 +132,7 @@ PL_RESIZER_HOLD_SLACK_MARGIN: 0.35
 GRT_RESIZER_HOLD_SLACK_MARGIN: 0.3
 
 # timing fixes
+RUN_POST_GRT_RESIZER_TIMING: True
 PNR_EXCLUDED_CELL_FILE: dir::pnr_exclude.cells
 
 # Increase density for more 
