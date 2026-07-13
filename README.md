@@ -5,7 +5,6 @@ Open source Ethernet focused ASIC featuring a
 This chip is designed for the second run of [wafer.space](https://wafer.space/), 
 targetting the Global Foundaries 180 nm process (`gf180mcu`), using the [open source `gf180mcuD` PDK](https://gf180mcu-pdk.readthedocs.io/en/latest/). 
 
-
 ![floorplan](precheck/chip_top.png) 
 
 Features: 
@@ -18,7 +17,6 @@ Features:
   - 100Mbps Ethernet compatible, 100BASE-TX
   - Our solar system will have been engulfed by the sun before it overflows 
 
-:heart: This is 100% human made code, all bugs are also 100% human made. 
 
 ## Coffee-shop family 
 
@@ -44,4 +42,3 @@ Thanks to the [Wafer.Space](https://wafer.space/) project, its contributors, and
 
 This hardware is distributed under the **strongly** reciprocal CERN Open Hardware Licence Version 2 unless
 otherwise specified.
-
