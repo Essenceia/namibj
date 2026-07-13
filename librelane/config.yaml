@@ -131,6 +131,9 @@ CLOCK_PERIOD: 20 # 50 MHz
 PL_RESIZER_HOLD_SLACK_MARGIN: 0.35
 GRT_RESIZER_HOLD_SLACK_MARGIN: 0.3
 
+# timing fixes
+PNR_EXCLUDED_CELL_FILE: dir::pnr_exclude.cells
+
 # Increase density for more 
 # logic on your die
 PL_TARGET_DENSITY_PCT: 35
