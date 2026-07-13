@@ -126,14 +126,20 @@ async def coffeepot_table_entry_expire_test(dut):
 
 @cocotb.test()
 async def coffeepot_table_multialloc_test(dut): 
-    await start_up(dut) 
-    coffeepot_module = dut.chip_top.i_chip_core.m_coffeepot
+    await start_up(dut)
+    if not GATES: 
+        coffeepot_module = dut.chip_top.i_chip_core.m_coffeepot
+    else: 
+        coffeepot_module = None
     await coffeepot_tests.table_multialloc_test_sequence(dut, coffeepot_module)
 
 @cocotb.test()
 async def coffeepot_table_realloc_test(dut): 
-    await start_up(dut) 
-    coffeepot_module = dut.chip_top.i_chip_core.m_coffeepot
+    await start_up(dut)
+    if not GATES: 
+        coffeepot_module = dut.chip_top.i_chip_core.m_coffeepot
+    else: 
+        coffeepot_module = None
     await coffeepot_tests.table_realloc_test_sequence(dut, coffeepot_module )
 
 # sim only tests: need accurate tracking of entry liveness to prevent fausle failes

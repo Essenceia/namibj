@@ -95,10 +95,15 @@ assign phy_tx3_v   = bidir_PAD[11];
 
 chip_top chip_top (
     `ifdef USE_POWER_PINS
-    .VDD,
-    .VSS,
-    .DVDD,
-    .DVSS,
+    .VDD(VDD),
+    .VSS(VSS),
+	`ifdef PAD_gf180mcu_fd_io
+	// short io and core voltage domain 
+	`else
+	.DVDD(DVDD),
+	.DVSS(DVSS),
+	`endif
+
     `endif
 
     .clk_PAD(clk),
