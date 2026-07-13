@@ -8,8 +8,8 @@ on:
       - "**"
     tags-ignore:
       - "**"
-  # Runs on all PRs
-  pull_request:
+  # don't runs on all PRs but only on manual dispatch
+  # pull_request:
   # Manual Dispatch
   workflow_dispatch:
 
