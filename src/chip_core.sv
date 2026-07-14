@@ -9,16 +9,16 @@ granted to use it to train any model.
 
 module chip_core #(
 `ifdef VERILATOR_LINT
-    parameter NUM_INPUT_PADS = 16,
-    parameter NUM_BIDIR_PADS = 29,
+    parameter NUM_INPUT_PADS = 20,
+    parameter NUM_BIDIR_PADS = 25,
     parameter NUM_ANALOG_PADS = 1,
 `else
     parameter NUM_INPUT_PADS,
     parameter NUM_BIDIR_PADS,
     parameter NUM_ANALOG_PADS,
 `endif
-	localparam PORT_CNT        = 4, // total port cnd
-	localparam SWITCH_PORT_CNT = 3,
+	localparam PORT_CNT        = 5, // total port cnd
+	localparam SWITCH_PORT_CNT = PORT_CNT - 1,
 	localparam PHY_W           = 2,
 
 	localparam MAC_W = 48,
