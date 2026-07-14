@@ -46,7 +46,6 @@ wire [NUM_BIDIR_PADS-1:0] bidir_input_unused;
 // tie unused pins
 localparam UNUSED_BIDIR_PADS_CNT = NUM_BIDIR_PADS; 
 
-assign bidir_out[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT] = {UNUSED_BIDIR_PADS_CNT{1'b0}};
 assign bidir_oe[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_CNT{1'b1}};
 assign bidir_cs[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_CNT{1'b0}};
 assign bidir_sl[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_CNT{1'b0}};
@@ -57,12 +56,20 @@ assign bidir_pd[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_C
 assign bidir_input_unused[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT] = bidir_in[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT];
 
 localparam INPUT_UNUSED = NUM_INPUT_PADS; 
-wire [INPUT_UNUSED-1:0] inputs_unused; 
-assign inputs_unused = input_in[NUM_INPUT_PADS-1-:INPUT_UNUSED];
 assign input_pu[NUM_INPUT_PADS-1-:INPUT_UNUSED] = {INPUT_UNUSED{1'b0}};
 assign input_pd[NUM_INPUT_PADS-1-:INPUT_UNUSED] = {INPUT_UNUSED{1'b1}};
 
+reg in0_q;
+ 
+always @(posedge clk) begin
+	if (~rst_n) 
+		in0_q <= 1'b0;
+	else 
+		in0_q <= input_in[0];
+end
 
-endmodule
+assign bidir_out[0] = in0_q;
+
+endmodule 
 
 `default_nettype wire

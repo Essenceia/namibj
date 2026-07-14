@@ -232,7 +232,7 @@ module chip_top #(
 
     // Core design
 
-    chip_core #(
+    (* keep *) chip_core #(
         .NUM_INPUT_PADS  (NUM_INPUT_PADS),
         .NUM_BIDIR_PADS  (NUM_BIDIR_PADS),
         .NUM_ANALOG_PADS (NUM_ANALOG_PADS)
