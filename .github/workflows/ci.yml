@@ -8,9 +8,9 @@ on:
       - "**"
     tags-ignore:
       - "**"
-   don't runs on all PRs but only on manual dispatch
-   pull_request:
-   Manual Dispatch
+  # don't runs on all PRs but only on manual dispatch
+  pull_request:
+  # Manual Dispatch
   workflow_dispatch:
 
 concurrency:
