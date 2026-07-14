@@ -48,7 +48,8 @@ DEFAULT_SLOT = 1x0p5
 
 # Slot can be any of AVAILABLE_SLOTS
 SLOT = $(DEFAULT_SLOT)
-$(info slow $(SLOT))) 
+
+$(info slot $(SLOT)) 
 
 ifeq ($(SLOT),default)
     SLOT = $(DEFAULT_SLOT)
