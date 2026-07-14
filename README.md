@@ -9,7 +9,7 @@ targetting the Global Foundaries 180 nm process (`gf180mcu`), using the [open so
 
 Features: 
 - Ethernet switch:
-  - 3x Full duplex Ethernet ports, 100BASE-TX (classic RJ42 cat-3 connection) 
+  - 4x Full duplex Ethernet ports, 100BASE-TX (classic RJ42 cat-3 connection) 
   - Unmanaged switch 
   - Cut-though forwarding
 - Heat death of the Universe counter:
