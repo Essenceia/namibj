@@ -9,20 +9,14 @@ granted to use it to train any model.
 
 module chip_core #(
 `ifdef VERILATOR_LINT
-    parameter NUM_INPUT_PADS = 20,
-    parameter NUM_BIDIR_PADS = 30,
-    parameter NUM_ANALOG_PADS = 4,
+    parameter NUM_INPUT_PADS = 1,
+    parameter NUM_BIDIR_PADS = 1,
+    parameter NUM_ANALOG_PADS = 30
 `else
     parameter NUM_INPUT_PADS,
     parameter NUM_BIDIR_PADS,
-    parameter NUM_ANALOG_PADS,
+    parameter NUM_ANALOG_PADS
 `endif
-	localparam PORT_CNT        = 5, // total port cnd
-	localparam SWITCH_PORT_CNT = PORT_CNT - 1,
-	localparam PHY_W           = 2,
-
-	localparam MAC_W = 48,
-	parameter [MAC_W-1:0] COLDBREW_MAC = 48'h0090CF00CAFE 
     )(
     `ifdef USE_POWER_PINS
     inout  wire VDD,
@@ -47,83 +41,10 @@ module chip_core #(
 
     inout  wire [NUM_ANALOG_PADS-1:0] analog  // Analog
 );
-/* Coffeepot 
-100Mbps Ethernet switch ASIC */ 
-// RX pins
-wire [PORT_CNT-1:0]       phy_rx_v;
-wire [PORT_CNT-1:0]       phy_rx_err;
-wire [PORT_CNT*PHY_W-1:0] phy_rx;	
-
-// TX pins
-wire [PORT_CNT-1:0]       phy_tx_v;
-wire [PORT_CNT*PHY_W-1:0] phy_tx;
-
-// pin mapping
-localparam RMII_IN_W  = 4; 
-localparam RMII_OUT_W = 3; 
-
 wire [NUM_BIDIR_PADS-1:0] bidir_input_unused; 
 
-genvar i; 
-
-generate
-	for(i = 0; i < PORT_CNT ; i = i+1 )begin: g_coffeepot_pin_conn_in
-		wire [PHY_W-1:0] phy_rx_next, phy_rx_dly;
-		wire             phy_rx_v_next, phy_rx_v_dly;
-		wire             phy_rx_err_next, phy_rx_err_dly;
-		// in
-		assign phy_rx_next[PHY_W-1:0] = input_in[i*RMII_IN_W+PHY_W-1-:PHY_W];
-		assign phy_rx_v_next          = input_in[i*RMII_IN_W+2];
-		assign phy_rx_err_next        = input_in[i*RMII_IN_W+3];
-
-		`ifdef SCL_gf180mcu_fd_sc_mcu7t5v0
-		gf180mcu_fd_sc_mcu7t5v0__dlyb_1 m_dly_phy_rx_0(
-			.I(phy_rx_next[0]),
-			.Z(phy_rx_dly[0]));
-		gf180mcu_fd_sc_mcu7t5v0__dlyb_1 m_dly_phy_rx_1(
-			.I(phy_rx_next[1]),
-			.Z(phy_rx_dly[1]));
-		gf180mcu_fd_sc_mcu7t5v0__dlyb_1 m_dly_phy_rx_v(
-	        .I(phy_rx_v_next),
-	        .Z(phy_rx_v_dly));
-		gf180mcu_fd_sc_mcu7t5v0__dlyb_1 m_dly_phy_rx_err(
-	        .I(phy_rx_err_next),
-	        .Z(phy_rx_err_dly));
-		`else
-		assign phy_rx_dly     = phy_rx_next; 
-		assign phy_rx_v_dly   = phy_rx_v_next; 
-		assign phy_rx_err_dly = phy_rx_err_next; 
-		`endif
-		assign phy_rx[(i+1)*PHY_W-1-:PHY_W] = phy_rx_dly;
-		assign phy_rx_v[i]                  = phy_rx_v_dly;
-		assign phy_rx_err[i]                = phy_rx_err_dly;
-		
-		assign input_pu[(i+1)*RMII_IN_W-1-:RMII_IN_W] = {RMII_IN_W{1'b0}};
-		assign input_pd[(i+1)*RMII_IN_W-1-:RMII_IN_W] = {RMII_IN_W{1'b1}};
-	end
-endgenerate 
-
-generate 
-	for(i = 0; i < PORT_CNT; i = i+1)begin: g_coffeepot_pin_conn_out
-	
-		// out 
-		assign bidir_out[i*RMII_OUT_W+PHY_W-1-:PHY_W] = phy_tx[(i+1)*PHY_W-1-:PHY_W];
-		assign bidir_out[i*RMII_OUT_W+2]              = phy_tx_v[i];
-
-		assign bidir_oe[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b1}};
-		assign bidir_cs[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b0}};
-		assign bidir_sl[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b0}};
-		assign bidir_ie[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b0}};
-		assign bidir_pu[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b0}};
-		assign bidir_pd[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = {RMII_OUT_W{1'b1}};
-
-		assign bidir_input_unused[(i+1)*RMII_OUT_W-1-:RMII_OUT_W] = bidir_in[(i+1)*RMII_OUT_W-1-:RMII_OUT_W];
-	end
-endgenerate 
-
 // tie unused pins
-localparam OUT_PADS_CNT = PORT_CNT*RMII_OUT_W;
-localparam UNUSED_BIDIR_PADS_CNT = NUM_BIDIR_PADS - OUT_PADS_CNT; 
+localparam UNUSED_BIDIR_PADS_CNT = NUM_BIDIR_PADS; 
 
 assign bidir_out[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT] = {UNUSED_BIDIR_PADS_CNT{1'b0}};
 assign bidir_oe[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_CNT{1'b1}};
@@ -135,59 +56,12 @@ assign bidir_pd[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_C
 
 assign bidir_input_unused[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT] = bidir_in[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT];
 
-/* 
- Don't allow any unused inputs 
-generate
-	if (NUM_INPUT_PADS > PORT_CNT*RMII_IN_W) begin: g_unused_inputs 
-		localparam INPUT_UNUSED = NUM_INPUT_PADS - (PORT_CNT*RMII_IN_W); 
-		wire [INPUT_UNUSED-1:0] inputs_unused; 
-		assign inputs_unused = input_in[NUM_INPUT_PADS-1-:INPUT_UNUSED];
-		assign input_pu[NUM_INPUT_PADS-1-:INPUT_UNUSED] = {INPUT_UNUSED{1'b0}};
-		assign input_pd[NUM_INPUT_PADS-1-:INPUT_UNUSED] = {INPUT_UNUSED{1'b1}};
-	end
-endgenerate
-*/ 
+localparam INPUT_UNUSED = NUM_INPUT_PADS; 
+wire [INPUT_UNUSED-1:0] inputs_unused; 
+assign inputs_unused = input_in[NUM_INPUT_PADS-1-:INPUT_UNUSED];
+assign input_pu[NUM_INPUT_PADS-1-:INPUT_UNUSED] = {INPUT_UNUSED{1'b0}};
+assign input_pd[NUM_INPUT_PADS-1-:INPUT_UNUSED] = {INPUT_UNUSED{1'b1}};
 
-/* Insert delay depending for particularly well placed pins to fix hold
- * violations */
-wire rst_n_dly;
-`ifdef SCL_gf180mcu_fd_sc_mcu7t5v0
-gf180mcu_fd_sc_mcu7t5v0__dlyb_1 m_dly_rst_n(
-        .I(rst_n),
-        .Z(rst_n_dly)
-);
-`else
-assign rst_n_dly = rst_n; 
-`endif
-
-
-coffeepot #(.PORT_CNT(SWITCH_PORT_CNT), .PHY_W(PHY_W), .HAS_TX_PHASE(0)) m_coffeepot(
-	.clk(clk), 
-	.rst_n(rst_n_dly), 
-
-	.tx_phase_i(1'bX),
-	
-	.phy_rx_v_i(phy_rx_v[SWITCH_PORT_CNT-1:0]),
-	.phy_rx_err_i(phy_rx_err[SWITCH_PORT_CNT-1:0]),
-	.phy_rx_i(phy_rx[PHY_W*SWITCH_PORT_CNT-1:0]),
-
-	.phy_tx_v_o(phy_tx_v[SWITCH_PORT_CNT-1:0]),
-	.phy_tx_o(phy_tx[PHY_W*SWITCH_PORT_CNT-1:0])
-); 
-
-coldbrew #(.PHY_W(2), .HAS_TX_PHASE(0), .DEFAULT_MAC(COLDBREW_MAC)) m_coldbrew(
-	.clk(clk), 
-	.rst_n(rst_n), 
-
-	.tx_phase_i(1'bX),
-	
-	.phy_rx_v_i(phy_rx_v[PORT_CNT-1]),
-	.phy_rx_err_i(phy_rx_err[PORT_CNT-1]),
-	.phy_rx_i(phy_rx[PHY_W*PORT_CNT-1-:PHY_W]),
-
-	.phy_tx_v_o(phy_tx_v[PORT_CNT-1]),
-	.phy_tx_o(phy_tx[PHY_W*PORT_CNT-1-:PHY_W])
-);
 
 endmodule
 

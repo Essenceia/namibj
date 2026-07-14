@@ -1,6 +1,0 @@
-[submodule "src/coffeepot"]
-	path = src/coffeepot
-	url = git@github.com:Essenceia/ethernet_switch_asic.git
-[submodule "src/coldbrew"]
-	path = src/coldbrew
-	url = git@github.com:Essenceia/Until_Heat_Death_Do_Us_Part.git
