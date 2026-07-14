@@ -32,25 +32,6 @@ DESIGN_NAME: chip_top
 VERILOG_FILES:
 - dir::../src/chip_top.sv
 - dir::../src/chip_core.sv
-- dir::../src/coffeepot/src/coffeepot.v
-- dir::../src/coffeepot/src/aiguilleur.v
-- dir::../src/coffeepot/src/mac_addr_table.v
-- dir::../src/coffeepot/src/switch_mac_rx.v
-- dir::../src/coffeepot/src/switch_mac_tx.v
-- dir::../src/coffeepot/src/rmii.v
-- dir::../src/coffeepot/src/switch.v
-- dir::../src/coffeepot/src/utils.v
-- dir::../src/coffeepot/src/arbitor.v
-- dir::../src/coffeepot/src/lookup.v
-- dir::../src/coffeepot/src/ttnn_timer.v
-- dir::../src/coffeepot/src/replacement_policy.v
-- dir::../src/coldbrew/src/coldbrew.v
-- dir::../src/coldbrew/src/crc_8.v
-- dir::../src/coldbrew/src/death_of_the_universe_counter.v
-- dir::../src/coldbrew/src/broadcast_timer.v
-- dir::../src/coldbrew/src/mac_conf.v
-- dir::../src/coldbrew/src/mac_rx.v
-- dir::../src/coldbrew/src/mac_tx.v
 
 # Synth directived for timing debug 
 SYNTH_AUTONAME: true 
