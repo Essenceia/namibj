@@ -65,10 +65,10 @@ always @(posedge clk) begin
 	if (~rst_n) 
 		in0_q <= 1'b0;
 	else 
-		in0_q <= input_in[0];
+		in0_q <= |input_in;
 end
 
-assign bidir_out[0] = in0_q;
+assign bidir_out = {NUM_BIDIR_PADS{in0_q}};
 
 endmodule 
 
