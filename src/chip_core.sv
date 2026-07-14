@@ -10,8 +10,8 @@ granted to use it to train any model.
 module chip_core #(
 `ifdef VERILATOR_LINT
     parameter NUM_INPUT_PADS = 20,
-    parameter NUM_BIDIR_PADS = 25,
-    parameter NUM_ANALOG_PADS = 1,
+    parameter NUM_BIDIR_PADS = 30,
+    parameter NUM_ANALOG_PADS = 4,
 `else
     parameter NUM_INPUT_PADS,
     parameter NUM_BIDIR_PADS,
@@ -134,6 +134,19 @@ assign bidir_pu[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_C
 assign bidir_pd[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT]  = {UNUSED_BIDIR_PADS_CNT{1'b0}}; // floating pad
 
 assign bidir_input_unused[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT] = bidir_in[NUM_BIDIR_PADS-1-:UNUSED_BIDIR_PADS_CNT];
+
+/* 
+ Don't allow any unused inputs 
+generate
+	if (NUM_INPUT_PADS > PORT_CNT*RMII_IN_W) begin: g_unused_inputs 
+		localparam INPUT_UNUSED = NUM_INPUT_PADS - (PORT_CNT*RMII_IN_W); 
+		wire [INPUT_UNUSED-1:0] inputs_unused; 
+		assign inputs_unused = input_in[NUM_INPUT_PADS-1-:INPUT_UNUSED];
+		assign input_pu[NUM_INPUT_PADS-1-:INPUT_UNUSED] = {INPUT_UNUSED{1'b0}};
+		assign input_pd[NUM_INPUT_PADS-1-:INPUT_UNUSED] = {INPUT_UNUSED{1'b1}};
+	end
+endgenerate
+*/ 
 
 /* Insert delay depending for particularly well placed pins to fix hold
  * violations */
